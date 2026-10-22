@@ -19,6 +19,29 @@ app.get("/pessoas", (req, res) => {
   });
 });
 
+
+ // GET - Buscar pessoa pelo ID
+app.get("/pessoas/:id", (req, res) => {
+  const { id } = req.params;
+
+  const sql = "SELECT * FROM pessoas WHERE id = ?";
+
+  conexao.query(sql, [id], (erro, resultado) => {
+    if (erro) {
+      return res.status(500).json({ erro: erro.message });
+    }
+
+    if (resultado.length === 0) {
+      return res.status(404).json({
+        mensagem: "Pessoa não encontrada"
+      });
+    }
+
+    res.json(resultado[0]);
+  });
+});
+
+
 // POST - Cadastrar pessoa
 app.post("/pessoas", (req, res) => {
   const { nome, idade } = req.body;
